@@ -1,0 +1,113 @@
+#### 8-Puzzle Using DFS ####
+
+def dfs(start, goal):
+    stack = [(start, [start])]
+    visited = set()
+
+    while stack:
+        state, path = stack.pop()
+
+        if state == goal:
+            return path
+
+        if state in visited:
+            continue
+
+        visited.add(state)
+        blank = state.index(0)
+        row, col = divmod(blank, 3)
+
+        moves = []
+        if row > 0:
+            moves.append(blank - 3)
+        if row < 2:
+            moves.append(blank + 3)
+        if col > 0:
+            moves.append(blank - 1)
+        if col < 2:
+            moves.append(blank + 1)
+
+        for move in moves:
+            new_state = list(state)
+            new_state[blank], new_state[move] = new_state[move], new_state[blank]
+            new_state = tuple(new_state)
+
+            if new_state not in visited:
+                stack.append((new_state, path + [new_state]))
+
+    return None
+
+def display(state):
+    for i in range(0, 9, 3):
+        print(state[i:i + 3])
+    print()
+
+start = (5, 4, 0, 6, 1, 8, 7, 3, 2)
+goal = (0, 1, 2, 3, 4, 5, 6, 7, 8)
+
+path = dfs(start, goal)
+
+if path:
+    print("Solution found in", len(path) - 1, "moves")
+    for state in path:
+        display(state)
+else:
+    print("No solution found")
+
+#### 8 Puzzle Using IDS ####
+
+def depth_limited(state, goal, limit, path):
+    if state == goal:
+        return path
+
+    if limit == 0:
+        return None
+
+    blank = state.index(0)
+    row, col = divmod(blank, 3)
+
+    moves = []
+    if row > 0:
+        moves.append(blank - 3)
+    if row < 2:
+        moves.append(blank + 3)
+    if col > 0:
+        moves.append(blank - 1)
+    if col < 2:
+        moves.append(blank + 1)
+
+    for move in moves:
+        new_state = list(state)
+        new_state[blank], new_state[move] = new_state[move], new_state[blank]
+        new_state = tuple(new_state)
+
+        if new_state not in path:
+            result = depth_limited(new_state, goal, limit - 1, path + [new_state])
+            if result:
+                return result
+
+    return None
+
+def ids(start, goal):
+    for depth in range(32):
+        result = depth_limited(start, goal, depth, [start])
+        if result:
+            return result
+    return None
+
+def display(state):
+    for i in range(0, 9, 3):
+        print(state[i:i + 3])
+    print()
+
+start = (5, 4, 0, 6, 1, 8, 7, 3, 2)
+goal = (0, 1, 2, 3, 4, 5, 6, 7, 8)
+
+path = ids(start, goal)
+
+if path:
+    print("Solution found in", len(path) - 1, "moves")
+    for state in path:
+        display(state)
+else:
+    print("No solution found within depth limit")
