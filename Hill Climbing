@@ -1,0 +1,25 @@
+def f(x):
+    return eval(expression)
+
+expression = input("Enter function in x (e.g. -(x-5)**2 + 25): ")
+start = int(input("Enter starting value: "))
+low = int(input("Enter lower limit: "))
+high = int(input("Enter upper limit: "))
+
+x = start
+
+while True:
+    neighbors = [n for n in [x - 1, x + 1] if low <= n <= high]
+
+    if not neighbors:
+        break
+
+    best = max(neighbors, key=f)
+
+    if f(best) <= f(x):
+        break
+
+    x = best
+
+print("Best solution:", x)
+print("Maximum value:", f(x))
