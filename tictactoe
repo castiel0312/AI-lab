@@ -1,0 +1,112 @@
+##### 1 TIC TAC TOE PROGRAM ######
+
+def print_board(board):
+    for i in range(0, 9, 3):
+        print(" | ".join(board[i:i + 3]))
+        if i < 6:
+            print("---------")
+
+def winner(board, player):
+    lines = [
+        (0, 1, 2), (3, 4, 5), (6, 7, 8),
+        (0, 3, 6), (1, 4, 7), (2, 5, 8),
+        (0, 4, 8), (2, 4, 6)
+    ]
+    return any(all(board[i] == player for i in line) for line in lines)
+
+def minimax(board, is_max):
+    if winner(board, "O"):
+        return 1
+    if winner(board, "X"):
+        return -1
+    if " " not in board:
+        return 0
+
+    if is_max:
+        best = -2
+        for i in range(9):
+            if board[i] == " ":
+                board[i] = "O"
+                best = max(best, minimax(board, False))
+                board[i] = " "
+        return best
+    else:
+        best = 2
+        for i in range(9):
+            if board[i] == " ":
+                board[i] = "X"
+                best = min(best, minimax(board, True))
+                board[i] = " "
+        return best
+
+board = [" "] * 9
+print("You are X. Computer is O.")
+
+while True:
+    print_board(board)
+    move = int(input("Enter position (1-9): ")) - 1
+
+    if move < 0 or move > 8 or board[move] != " ":
+        print("Invalid move. Try again.")
+        continue
+
+    board[move] = "X"
+
+    if winner(board, "X"):
+        print_board(board)
+        print("You win!")
+        break
+
+    if " " not in board:
+        print_board(board)
+        print("Draw!")
+        break
+
+    best_score = -2
+    best_move = -1
+
+    for i in range(9):
+        if board[i] == " ":
+            board[i] = "O"
+            score = minimax(board, False)
+            board[i] = " "
+            if score > best_score:
+                best_score = score
+                best_move = i
+
+    board[best_move] = "O"
+
+    if winner(board, "O"):
+        print_board(board)
+        print("Computer wins!")
+        break
+
+    if " " not in board:
+        print_board(board)
+        print("Draw!")
+        break
+
+
+##### 2 Vaccum Cleaner ######
+
+rooms = {
+    "A": input("Enter status of Room A (Clean/Dirty): ").strip().capitalize(),
+    "B": input("Enter status of Room B (Clean/Dirty): ").strip().capitalize()
+}
+
+position = input("Enter vacuum position (A/B): ").strip().upper()
+
+while rooms["A"] == "Dirty" or rooms["B"] == "Dirty":
+    print("Vacuum is in Room", position)
+
+    if rooms[position] == "Dirty":
+        rooms[position] = "Clean"
+        print("Room", position, "cleaned")
+    else:
+        print("Room", position, "is already clean")
+
+    if rooms["A"] == "Dirty" or rooms["B"] == "Dirty":
+        position = "B" if position == "A" else "A"
+        print("Moving to Room", position)
+
+print("Both rooms are clean.")
