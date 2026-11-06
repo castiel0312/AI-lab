@@ -1,0 +1,22 @@
+# Given facts
+A = True
+D = True
+
+# Simplification
+print("A =", A, "D =", D)
+
+# Addition
+A_or_B = A or False
+
+# Modus Ponens
+C = True if A_or_B else False
+
+# Addition
+B_or_D = False or D
+
+# Conjunction
+result = B_or_D and C
+
+print("C =", C)
+print("B OR D =", B_or_D)
+print("Statement Proved" if result else "Not Proved")
