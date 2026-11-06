@@ -1,0 +1,28 @@
+facts = {"barks", "four_legs", "sharp_teeth"}
+
+rules = [
+    ({"barks", "four_legs"}, "dog"),
+    ({"feathers", "lays_eggs"}, "bird"),
+    ({"dog"}, "mammal"),
+    ({"mammal", "sharp_teeth"}, "carnivore"),
+    ({"bird"}, "can_fly")
+]
+
+while True:
+    new_facts = set(facts)
+
+    for conditions, result in rules:
+        if conditions.issubset(facts):
+            new_facts.add(result)
+
+    if new_facts == facts:
+        break
+
+    facts = new_facts
+
+print("Derived Facts:", sorted(facts))
+
+if "carnivore" in facts:
+    print("Tommy is a Carnivore")
+else:
+    print("Tommy is not proven to be a Carnivore")
